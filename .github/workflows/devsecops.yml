@@ -28,10 +28,11 @@ jobs:
           cache: maven
 
       - name: Build Application
-        working-directory: Java-Login-App
+        working-directory: ./Java-Login-App
         run: |
           mvn clean package -DskipTests
 
       - name: Run Tests
+        working-directory: ./Java-Login-App
         run: |
           mvn test
