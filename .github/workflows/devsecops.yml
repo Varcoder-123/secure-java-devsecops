@@ -18,12 +18,12 @@ jobs:
     steps:
 
       - name: Checkout Source Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0  ##GitHub Actions fetches the complete history instead of only the latest commit.
 
       - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
 
   build:
     name: Build Application
