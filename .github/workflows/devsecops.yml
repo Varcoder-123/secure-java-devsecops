@@ -28,6 +28,7 @@ jobs:
           cache: maven
 
       - name: Build Application
+        working-directory: Java-Login-App
         run: |
           mvn clean package -DskipTests
 
