@@ -11,65 +11,65 @@ on:
 
 jobs:
 
-  gitleaks:
-  name: Secret Detection
-  runs-on: ubuntu-latest
+    gitleaks:
+    name: Secret Detection
+    runs-on: ubuntu-latest
 
-  steps:
+    steps:
 
-    - name: Checkout Source Code
-      uses: actions/checkout@v6
-      with:
-        fetch-depth: 0
+      - name: Checkout Source Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-    - name: Install Gitleaks
-      run: |
-        GITLEAKS_VERSION="8.30.0"
+      - name: Install Gitleaks
+        run: |
+          GITLEAKS_VERSION="8.30.0"
 
-        curl -sSfL \
-          "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
-          -o gitleaks.tar.gz
+          curl -sSfL \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            -o gitleaks.tar.gz
 
-        tar -xzf gitleaks.tar.gz gitleaks
+          tar -xzf gitleaks.tar.gz gitleaks
 
-        sudo mv gitleaks /usr/local/bin/gitleaks
+          sudo mv gitleaks /usr/local/bin/gitleaks
 
-        gitleaks version
+          gitleaks version
 
-    - name: Run Gitleaks
-      id: gitleaks
-      run: |
-        set +e
+      - name: Run Gitleaks
+        id: gitleaks
+        run: |
+          set +e
 
-        gitleaks git \
-          --redact \
-          --verbose \
-          --report-format json \
-          --report-path gitleaks-report.json
+          gitleaks git \
+            --redact \
+            --verbose \
+            --report-format json \
+            --report-path gitleaks-report.json
 
-        EXIT_CODE=$?
+          EXIT_CODE=$?
 
-        echo "Gitleaks exit code: $EXIT_CODE"
+          echo "Gitleaks exit code: $EXIT_CODE"
 
-        if [ "$EXIT_CODE" -eq 0 ]; then
-          echo "✅ No secrets detected"
-        elif [ "$EXIT_CODE" -eq 1 ]; then
-          echo "❌ Secrets detected!"
-          echo "Gitleaks report generated: gitleaks-report.json"
-        else
-          echo "❌ Gitleaks encountered an error"
-        fi
+          if [ "$EXIT_CODE" -eq 0 ]; then
+            echo "✅ No secrets detected"
+          elif [ "$EXIT_CODE" -eq 1 ]; then
+            echo "❌ Secrets detected!"
+            echo "Gitleaks report generated: gitleaks-report.json"
+          else
+            echo "❌ Gitleaks encountered an error"
+          fi
 
-        echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
 
-        exit "$EXIT_CODE"
+          exit "$EXIT_CODE"
 
-    - name: Upload Gitleaks Report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: gitleaks-report
-        path: gitleaks-report.json
+      - name: Upload Gitleaks Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.json
 
   build:
     name: Build Application
