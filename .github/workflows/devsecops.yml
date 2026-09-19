@@ -42,6 +42,7 @@ jobs:
           set +e
 
           gitleaks git \
+            --config ./gitleaks.toml \
             --redact \
             --verbose \
             --report-format json \
