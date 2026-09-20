@@ -47,7 +47,7 @@ jobs:
   
           set +e
 
-          gitleaks dir . 
+          gitleaks --repo-url=https://github.com/Plazmaz/leaky-repo.git -v
 
           EXIT_CODE=$?
 
