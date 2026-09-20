@@ -37,12 +37,15 @@ jobs:
           gitleaks version
 
       - name: Run Gitleaks
-        working-directory: ./leaky-repo
+        id: gitleaks
         run: |
+
+          pwd 
+          
           set +e
           
           gitleaks dir . \
-            --config ../gitleaks.toml \
+            --config ./gitleaks.toml \
             --redact \
             --verbose
 
