@@ -44,15 +44,7 @@ jobs:
 
           echo "=== Current Directory ==="
           pwd
-
-          echo "=== Repository Files ==="
-          find . -type f | head -100
-
-          echo "=== Gitleaks Config ==="
-          cat ./gitleaks.toml
-
-          echo "=== Running Gitleaks ==="
-
+  
           set +e
 
           gitleaks dir . \
