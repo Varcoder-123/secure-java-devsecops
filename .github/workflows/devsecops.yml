@@ -50,10 +50,7 @@ jobs:
         
           set +e
           
-          gitleaks dir . \
-            --config ./gitleaks.toml \
-            --redact \
-            --verbose
+          gitleaks dir . 
 
       # - name: Upload Gitleaks Report
       #   if: always()
