@@ -1,14 +1,3 @@
-name: DevSecOps Pipeline
-
-on:
-  push:
-    branches:
-      - main
-
-  pull_request:
-    branches:
-      - main
-
 jobs:
 
   gitleaks:
@@ -17,14 +6,23 @@ jobs:
 
     steps:
 
+      # Checkout your actual project
       - name: Checkout Source Code
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
+      # Checkout leaky-repo for testing
+      - name: Checkout Leaky Repository
+        uses: actions/checkout@v6
+        with:
+          repository: Plazmaz/leaky-repo
+          path: leaky-repo
+          fetch-depth: 0
+
       - name: Install Gitleaks
         run: |
-          GITLEAKS_VERSION="8.30.0"
+          GITLEAKS_VERSION="8.30.1"
 
           curl -sSfL \
             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
@@ -39,15 +37,12 @@ jobs:
       - name: Run Gitleaks
         id: gitleaks
         run: |
-          echo "=== Gitleaks Version ==="
-          gitleaks version
-
-          echo "=== Current Directory ==="
-          pwd
-  
           set +e
 
-          gitleaks --repo-url=https://github.com/Plazmaz/leaky-repo.git -v
+          gitleaks dir ./leaky-repo \
+            --config ./gitleaks.toml \
+            --redact \
+            --verbose
 
           EXIT_CODE=$?
 
@@ -64,10 +59,3 @@ jobs:
           echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
 
           exit "$EXIT_CODE"
-
-      # - name: Upload Gitleaks Report
-      #   if: always()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: gitleaks-report
-      #     path: gitleaks-report.json
