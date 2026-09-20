@@ -46,7 +46,7 @@ jobs:
 
           cd leaky-repo
 
-          ls
+          pwd
         
           set +e
           
