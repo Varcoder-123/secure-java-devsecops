@@ -1,27 +1,33 @@
-name: Gitleaks Benchmark
+name: DevSecOps Pipeline
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
 
 jobs:
+
   gitleaks:
-    name: Scan Leaky Repository
-    runs-on: ubuntu-latestc 
+    name: Secret Detection
+    runs-on: ubuntu-latest
 
     steps:
 
-      - name: Checkout Leaky Repository
+      - name: Checkout Source Code
         uses: actions/checkout@v6
         with:
-          repository: secure-java-devsecops/leaky-repo
           fetch-depth: 0
 
       - name: Install Gitleaks
         run: |
-          VERSION="8.30.1"
+          GITLEAKS_VERSION="8.30.0"
 
           curl -sSfL \
-            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
             -o gitleaks.tar.gz
 
           tar -xzf gitleaks.tar.gz gitleaks
@@ -30,17 +36,41 @@ jobs:
 
           gitleaks version
 
-      - name: Scan Repository
+      - name: Run Gitleaks
+        id: gitleaks
         run: |
-          gitleaks dir . \
-            --redact \
-            --verbose \
-            --report-format json \
-            --report-path gitleaks-report.json
+          echo "=== Gitleaks Version ==="
+          gitleaks version
 
-      - name: Upload Gitleaks Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gitleaks-report
-          path: gitleaks-report.json
+          echo "=== Current Directory ==="
+          pwd
+
+          echo "=== enter into leaky-repo ==="
+          cd leaky-repo
+          
+          set +e
+
+          gitleaks dir . 
+
+          EXIT_CODE=$?
+
+          echo "Gitleaks exit code: $EXIT_CODE"
+
+          if [ "$EXIT_CODE" -eq 0 ]; then
+            echo "✅ No secrets detected"
+          elif [ "$EXIT_CODE" -eq 1 ]; then
+            echo "❌ Secrets detected!"
+          else
+            echo "❌ Gitleaks encountered an error"
+          fi
+
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+
+          exit "$EXIT_CODE"
+
+      # - name: Upload Gitleaks Report
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: gitleaks-report
+      #     path: gitleaks-report.json
