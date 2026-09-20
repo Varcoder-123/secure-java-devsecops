@@ -3,13 +3,27 @@ title = "Custom DevSecOps Gitleaks Configuration"
 [extend]
 useDefault = true
 
+# Detect passwords in key=value formats
 [[rules]]
 id = "hardcoded-password"
 description = "Hardcoded password detected"
+
 regex = '''(?i)(password|passwd|pwd|pass)\s*[:=]\s*["']?[A-Za-z0-9!@#$%^&*._-]{6,}["']?'''
+
 keywords = [
     "password",
     "passwd",
     "pwd",
     "pass"
+]
+
+# Detect passwords inside XML tags
+[[rules]]
+id = "xml-hardcoded-password"
+description = "Hardcoded password detected in XML"
+
+regex = '''(?i)<password>\s*[^<\r\n]{6,}\s*</password>'''
+
+keywords = [
+    "password"
 ]
