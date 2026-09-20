@@ -4,7 +4,7 @@ title = "Custom DevSecOps Gitleaks Configuration"
 useDefault = true
 
 [[rules]]
-id = "custom-secret"
+id = "custom-hardcoded-secret"
 description = "Potential hardcoded secret detected"
 
-regex = '''(?i)\b[A-Za-z0-9!@#$%^&*._-]{8,}\b'''
+regex = '''(?i)\b(?=[A-Za-z0-9!@#$%^&*._-]{8,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*._-])[A-Za-z0-9!@#$%^&*._-]{8,}\b'''
