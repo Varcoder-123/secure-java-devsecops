@@ -41,7 +41,12 @@ jobs:
         run: |
           set +e
 
-          gitleaks git . --redact --verbose
+          gitleaks git \
+            --config ./gitleaks.toml \
+            --redact \
+            --verbose \
+            --report-format json \
+            --report-path gitleaks-report.json
 
           EXIT_CODE=$?
 
