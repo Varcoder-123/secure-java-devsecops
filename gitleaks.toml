@@ -6,8 +6,12 @@ useDefault = true
 [[rules]]
 id = "hardcoded-password"
 description = "Hardcoded password detected"
-regex = '''(?i)(pwd|pass)\s*[:=]\s*["']?[A-Za-z0-9!@#$%^&*._-]{6,}["']?'''
+
+regex = '''(?i)(password|passwd|pwd|pass)\s*[:=]\s*["']?(?!var\.|data\.|local\.|module\.|resource\.|each\.|self\.)([A-Za-z0-9!@#$%^&*._-]{6,})["']?'''
+
 keywords = [
+    "password",
+    "passwd",
     "pwd",
     "pass"
 ]
