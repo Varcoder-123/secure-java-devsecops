@@ -25,5 +25,3 @@ secretGroup = 1
 keywords = [
     "auth"
 ]
-
-entropy = 3.0
