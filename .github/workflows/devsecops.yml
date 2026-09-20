@@ -41,8 +41,13 @@ jobs:
         run: |
 
           pwd
-           
+
           ls
+
+          cd leaky-repo
+
+          ls
+        
           set +e
           
           gitleaks dir . \
