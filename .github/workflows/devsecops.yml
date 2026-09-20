@@ -47,10 +47,7 @@ jobs:
   
           set +e
 
-          gitleaks dir . \
-            --config ./gitleaks.toml \
-            --redact \
-            --verbose
+          gitleaks dir . 
 
           EXIT_CODE=$?
 
