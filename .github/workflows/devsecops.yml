@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Leaky Repository
         uses: actions/checkout@v6
         with:
-          repository: Plazmaz/leaky-repo
+          repository: secure-java-devsecops/leaky-repo
           path: leaky-repo
           fetch-depth: 0
 
