@@ -39,14 +39,26 @@ jobs:
       - name: Run Gitleaks
         id: gitleaks
         run: |
+          echo "=== Gitleaks Version ==="
+          gitleaks version
+
+          echo "=== Current Directory ==="
+          pwd
+
+          echo "=== Repository Files ==="
+          find . -type f | head -100
+
+          echo "=== Gitleaks Config ==="
+          cat ./gitleaks.toml
+
+          echo "=== Running Gitleaks ==="
+
           set +e
 
-          gitleaks git \
+          gitleaks dir . \
             --config ./gitleaks.toml \
             --redact \
-            --verbose \
-            --report-format json \
-            --report-path gitleaks-report.json
+            --verbose
 
           EXIT_CODE=$?
 
