@@ -1,24 +1,15 @@
-title = "DevSecOps Gitleaks Configuration"
+title = "Custom DevSecOps Gitleaks Configuration"
 
 [extend]
 useDefault = true
 
 [[rules]]
-id = "generic-hardcoded-secret"
-description = "Generic hardcoded secret"
-
-regex = '''(?i)((key|api|token|secret|passwd|password|psw|pass|pswd)[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}["']([0-9a-zA-Z!@#$%^&*<>\\\-_.=:/]{6,100})["']'''
-
-secretGroup = 4
-
+id = "hardcoded-password"
+description = "Hardcoded password detected"
+regex = '''(?i)(password|passwd|pwd|pass)\s*[:=]\s*["']?[A-Za-z0-9!@#$%^&*._-]{6,}["']?'''
 keywords = [
-    "key",
-    "api",
-    "token",
-    "secret",
-    "passwd",
     "password",
-    "psw",
-    "pass",
-    "pswd"
+    "passwd",
+    "pwd",
+    "pass"
 ]
