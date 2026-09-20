@@ -42,6 +42,7 @@ jobs:
           set +e
 
           gitleaks git \
+            --source . \
             --config ./gitleaks.toml \
             --redact \
             --verbose \

@@ -13,15 +13,3 @@ keywords = [
     "pwd",
     "pass"
 ]
-
-[[rules]]
-id = "docker-auth-token"
-description = "Docker registry authentication token detected"
-
-regex = '''(?i)"auth"\s*:\s*"([^"]{8,})"'''
-
-secretGroup = 1
-
-keywords = [
-    "auth"
-]
