@@ -1,31 +1,27 @@
-jobs:
+name: Gitleaks Benchmark
 
+on:
+  workflow_dispatch:
+
+jobs:
   gitleaks:
-    name: Secret Detection
+    name: Scan Leaky Repository
     runs-on: ubuntu-latest
 
     steps:
 
-      # Checkout your actual project
-      - name: Checkout Source Code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      # Checkout leaky-repo for testing
       - name: Checkout Leaky Repository
         uses: actions/checkout@v6
         with:
           repository: secure-java-devsecops/leaky-repo
-          path: leaky-repo
           fetch-depth: 0
 
       - name: Install Gitleaks
         run: |
-          GITLEAKS_VERSION="8.30.1"
+          VERSION="8.30.1"
 
           curl -sSfL \
-            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" \
             -o gitleaks.tar.gz
 
           tar -xzf gitleaks.tar.gz gitleaks
@@ -34,28 +30,17 @@ jobs:
 
           gitleaks version
 
-      - name: Run Gitleaks
-        id: gitleaks
+      - name: Scan Repository
         run: |
-          set +e
-
-          gitleaks dir ./leaky-repo \
-            --config ./gitleaks.toml \
+          gitleaks dir . \
             --redact \
-            --verbose
+            --verbose \
+            --report-format json \
+            --report-path gitleaks-report.json
 
-          EXIT_CODE=$?
-
-          echo "Gitleaks exit code: $EXIT_CODE"
-
-          if [ "$EXIT_CODE" -eq 0 ]; then
-            echo "✅ No secrets detected"
-          elif [ "$EXIT_CODE" -eq 1 ]; then
-            echo "❌ Secrets detected!"
-          else
-            echo "❌ Gitleaks encountered an error"
-          fi
-
-          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
-
-          exit "$EXIT_CODE"
+      - name: Upload Gitleaks Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.json
