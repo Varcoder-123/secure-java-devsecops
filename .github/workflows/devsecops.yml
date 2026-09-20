@@ -39,6 +39,8 @@ jobs:
       - name: Run Gitleaks
         working-directory: ./leaky-repo
         run: |
+          set +e
+          
           gitleaks dir . \
             --config ../gitleaks.toml \
             --redact \
