@@ -37,21 +37,13 @@ jobs:
           gitleaks version
 
       - name: Run Gitleaks
+        working-directory: ./leaky-repo
         run: |
-          echo "=== Gitleaks Version ==="
-          gitleaks version
-
           echo "=== Current Directory ==="
           pwd
 
-          echo "=== Entering leaky-repo ==="
-          cd leaky-repo
-
-          echo "=== Directory After CD ==="
-          pwd
-
-          echo "=== Files ==="
-          ls -la
+          echo "=== Gitleaks Version ==="
+          gitleaks version
 
           echo "=== Running Gitleaks ==="
           gitleaks dir . --redact --verbose
