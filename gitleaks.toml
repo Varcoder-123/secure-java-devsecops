@@ -18,7 +18,7 @@ keywords = [
 id = "docker-auth-token"
 description = "Docker registry authentication token detected"
 
-regex = '''(?i)"auth"\s*:\s*"([A-Za-z0-9+/]{20,}={0,2})"'''
+regex = '''(?i)"auth"\s*:\s*"([^"]{8,})"'''
 
 secretGroup = 1
 
