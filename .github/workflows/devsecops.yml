@@ -39,14 +39,10 @@ jobs:
       - name: Run Gitleaks
         working-directory: ./leaky-repo
         run: |
-          echo "=== Current Directory ==="
-          pwd
-
-          echo "=== Gitleaks Version ==="
-          gitleaks version
-
-          echo "=== Running Gitleaks ==="
-          gitleaks dir . --redact --verbose
+          gitleaks dir . \
+            --config ../gitleaks.toml \
+            --redact \
+            --verbose
 
       # - name: Upload Gitleaks Report
       #   if: always()
