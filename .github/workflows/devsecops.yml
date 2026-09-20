@@ -40,8 +40,9 @@ jobs:
         id: gitleaks
         run: |
 
-          pwd 
-          
+          pwd
+           
+          ls
           set +e
           
           gitleaks dir . \
