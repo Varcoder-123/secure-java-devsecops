@@ -56,7 +56,6 @@ jobs:
             echo "✅ No secrets detected"
           elif [ "$EXIT_CODE" -eq 1 ]; then
             echo "❌ Secrets detected!"
-            echo "Gitleaks report generated: gitleaks-report.json"
           else
             echo "❌ Gitleaks encountered an error"
           fi
@@ -65,12 +64,12 @@ jobs:
 
           exit "$EXIT_CODE"
 
-      - name: Upload Gitleaks Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gitleaks-report
-          path: gitleaks-report.json
+      # - name: Upload Gitleaks Report
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: gitleaks-report
+      #     path: gitleaks-report.json
 
   build:
     name: Build Application
