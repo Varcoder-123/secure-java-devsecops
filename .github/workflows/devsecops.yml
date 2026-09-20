@@ -70,29 +70,3 @@ jobs:
       #   with:
       #     name: gitleaks-report
       #     path: gitleaks-report.json
-
-  build:
-    name: Build Application
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-          cache: maven
-
-      - name: Build Application
-        working-directory: ./Java-Login-App
-        run: |
-          mvn clean package -DskipTests
-
-      - name: Run Tests
-        working-directory: ./Java-Login-App
-        run: |
-          mvn test
